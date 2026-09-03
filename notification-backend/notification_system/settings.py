@@ -8,7 +8,10 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-produc
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='localhost,127.0.0.1,.vercel.app',
+).split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -81,7 +84,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:3000,http://localhost:5173'
+    default=(
+        'http://localhost:3000,http://localhost:5173,'
+        'https://notification-frontend-delta.vercel.app'
+    ),
 ).split(',')
 
 REST_FRAMEWORK = {
