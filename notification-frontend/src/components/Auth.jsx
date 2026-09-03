@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { userAPI } from '../services/api';
+import { getApiErrorMessage, userAPI } from '../services/api';
 import '../styles/Auth.css';
 
 const Auth = ({ onLoginSuccess, currentUser }) => {
@@ -111,8 +111,7 @@ const Auth = ({ onLoginSuccess, currentUser }) => {
         }
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.error || error.message;
-      setMessage(`❌ ${errorMsg}`);
+      setMessage(`❌ ${getApiErrorMessage(error)}`);
     } finally {
       setLoading(false);
     }

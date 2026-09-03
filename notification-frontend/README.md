@@ -25,10 +25,11 @@ npm install
 Create `.env` file if you need to customize the API URL:
 
 ```
-REACT_APP_API_URL=http://localhost:8000/api
+VITE_API_URL=http://localhost:8000/api
 ```
 
-By default, it connects to `http://localhost:8000/api`
+Without this setting, local development uses Vite's `/api` proxy and forwards
+requests to `http://localhost:8000`.
 
 ### 3. Start Development Server
 
@@ -166,9 +167,13 @@ Output: `dist/` folder ready to deploy to Vercel
 2. Import repo to Vercel
 3. Set environment variable:
    ```
-   REACT_APP_API_URL=https://your-backend-url.com/api
+   VITE_API_URL=https://your-backend-url.com/api
    ```
-4. Deploy
+   This must be the public URL of the separately deployed Django backend and
+   must include the `/api` suffix. Do not use the Vercel frontend URL here.
+4. On the backend, set `CORS_ALLOWED_ORIGINS` to the Vercel site origin (for
+   example, `https://notification-frontend-delta.vercel.app`).
+5. Redeploy after saving the variable (Vite embeds it at build time).
 
 ## Browser Support
 

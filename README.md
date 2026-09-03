@@ -192,7 +192,7 @@ notification-system/
 ```
 1. Push to GitHub
 2. Import repo to Vercel
-3. Set REACT_APP_API_URL environment variable
+3. Set `VITE_API_URL` to your public Django backend URL, including `/api`
 4. Deploy
 ```
 

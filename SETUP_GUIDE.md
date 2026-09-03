@@ -349,7 +349,8 @@ Let's say you add a "user_registered" trigger:
    - Build Command: `npm run build`
 
 3. **Add Environment Variables**
-   - Add `REACT_APP_API_URL=https://yourdomain.onrender.com/api`
+   - Add `VITE_API_URL=https://yourdomain.onrender.com/api`
+   - On Render, add `CORS_ALLOWED_ORIGINS=https://your-vercel-site.vercel.app`
 
 4. **Deploy**
    - Click "Deploy"
