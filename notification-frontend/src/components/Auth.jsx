@@ -21,6 +21,12 @@ const Auth = ({ onLoginSuccess, currentUser }) => {
     });
   };
 
+  const blockNonNumericPhoneInput = (event) => {
+    if (event.data && /\D/.test(event.data)) {
+      event.preventDefault();
+    }
+  };
+
   // Logout is only meaningful for an authenticated user. Reset a stale mode
   // whenever the user session is cleared (including from the header button).
   useEffect(() => {
@@ -35,6 +41,11 @@ const Auth = ({ onLoginSuccess, currentUser }) => {
     setMessage('');
 
     try {
+      if (!/^\d{10}$/.test(formData.phone_number)) {
+        setMessage('❌ Phone number must contain exactly 10 digits');
+        return;
+      }
+
       if (mode === 'login') {
         const response = await userAPI.login(
           formData.username,
@@ -167,6 +178,8 @@ const Auth = ({ onLoginSuccess, currentUser }) => {
                 placeholder="1234567890"
                 value={formData.phone_number}
                 onChange={(e) => handlePhoneChange(e.target.value)}
+                onBeforeInput={blockNonNumericPhoneInput}
+                required
               />
             </div>
 
@@ -235,6 +248,8 @@ const Auth = ({ onLoginSuccess, currentUser }) => {
                 placeholder="1234567890"
                 value={formData.phone_number}
                 onChange={(e) => handlePhoneChange(e.target.value)}
+                onBeforeInput={blockNonNumericPhoneInput}
+                required
               />
             </div>
 
