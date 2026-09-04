@@ -111,6 +111,12 @@ const Auth = ({ onLoginSuccess, currentUser }) => {
         }
       }
     } catch (error) {
+      if (mode === 'login' && error.response?.status === 404 && error.response?.data?.error === 'User not found') {
+        setMode('register');
+        setMessage('❌ Your temporary demo account has expired. Please create it again to continue.');
+        return;
+      }
+
       setMessage(`❌ ${getApiErrorMessage(error)}`);
     } finally {
       setLoading(false);
