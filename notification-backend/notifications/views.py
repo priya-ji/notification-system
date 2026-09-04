@@ -169,10 +169,12 @@ class UserSessionViewSet(viewsets.ViewSet):
         try:
             user = User.objects.get(id=user_id)
             
-            # Update session
-            session = UserSession.objects.filter(user=user).latest('logged_in_at')
-            session.logged_out_at = timezone.now()
-            session.save()
+            # A newly registered user may not have a login session yet. Logout
+            # should still complete and fire notifications in that case.
+            session = UserSession.objects.filter(user=user).order_by('-logged_in_at').first()
+            if session:
+                session.logged_out_at = timezone.now()
+                session.save()
             
             # Fire logout triggers
             logout_trigger = Trigger.objects.filter(name='logout').first()
