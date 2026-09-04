@@ -6,7 +6,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-production')
 
-DEBUG = config('DEBUG', default=True, cast=bool)
+# Keep Django's detailed debug pages local only. Serverless deployments must
+# never return tracebacks to browsers.
+DEBUG = config('DEBUG', default=not bool(os.environ.get('VERCEL')), cast=bool)
 
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',

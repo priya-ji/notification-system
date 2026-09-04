@@ -18,6 +18,10 @@ export const getApiErrorMessage = (error) => {
     return 'API is not configured. Set VITE_API_URL to your deployed backend URL, including /api.';
   }
 
+  if (error.response?.status >= 500) {
+    return 'The notification service is temporarily unavailable. Please try again shortly.';
+  }
+
   const data = error.response?.data;
   if (typeof data === 'string' && data.trim()) return data;
   if (typeof data?.error === 'string') return data.error;
