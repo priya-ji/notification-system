@@ -191,10 +191,13 @@ class UserSessionViewSet(viewsets.ViewSet):
                 'message': 'Logout successful'
             })
         except User.DoesNotExist:
-            return Response(
-                {'error': 'User not found'},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            # Serverless demo instances may be recycled between login and
+            # logout. Logging out is still safe and should clear the browser
+            # session even when the temporary server-side record is gone.
+            return Response({
+                'success': True,
+                'message': 'Logged out locally; the server session had already expired.'
+            })
     
     @action(detail=False, methods=['get'])
     def current_user(self, request):
