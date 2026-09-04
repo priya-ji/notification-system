@@ -154,10 +154,39 @@ class UserSessionViewSet(viewsets.ViewSet):
                     status=status.HTTP_401_UNAUTHORIZED
                 )
         except User.DoesNotExist:
-            return Response(
-                {'error': 'User not found'},
-                status=status.HTTP_404_NOT_FOUND
+            # The Vercel demo database can be reset when an instance is
+            # recycled. Recreate the temporary account so the user can keep
+            # using the demo instead of being blocked at login.
+            if not username or not password:
+                return Response(
+                    {'error': 'Username and password are required'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            user = User(username=username, email=email)
+            user.set_password(password)
+            user.save()
+            UserSession.objects.create(
+                user=user,
+                ip_address=self.get_client_ip(request),
+                user_agent=request.META.get('HTTP_USER_AGENT', ''),
             )
+
+            login_trigger = Trigger.objects.filter(name='login').first()
+            for template in login_trigger.templates.filter(is_enabled=True) if login_trigger else []:
+                NotificationService.send_notification(template.id, {
+                    'phone_number': phone_number or '1234567890',
+                    'email': email or user.email,
+                    'user_id': user.id,
+                })
+
+            return Response({
+                'success': True,
+                'user_id': user.id,
+                'username': user.username,
+                'is_staff': user.is_staff,
+                'message': 'Temporary account recreated and login successful',
+            })
     
     @action(detail=False, methods=['post'])
     def logout(self, request):
