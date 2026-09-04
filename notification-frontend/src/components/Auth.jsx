@@ -14,6 +14,13 @@ const Auth = ({ onLoginSuccess, currentUser }) => {
     email: '',
   });
 
+  const handlePhoneChange = (value) => {
+    setFormData({
+      ...formData,
+      phone_number: value.replace(/\D/g, '').slice(0, 10),
+    });
+  };
+
   // Logout is only meaningful for an authenticated user. Reset a stale mode
   // whenever the user session is cleared (including from the header button).
   useEffect(() => {
@@ -154,9 +161,12 @@ const Auth = ({ onLoginSuccess, currentUser }) => {
               <label>Phone Number (for WhatsApp)</label>
               <input
                 type="tel"
-                placeholder="+1234567890"
+                inputMode="numeric"
+                pattern="[0-9]{10}"
+                maxLength="10"
+                placeholder="1234567890"
                 value={formData.phone_number}
-                onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+                onChange={(e) => handlePhoneChange(e.target.value)}
               />
             </div>
 
@@ -219,9 +229,12 @@ const Auth = ({ onLoginSuccess, currentUser }) => {
               <label>Phone Number (for WhatsApp)</label>
               <input
                 type="tel"
-                placeholder="+1234567890"
+                inputMode="numeric"
+                pattern="[0-9]{10}"
+                maxLength="10"
+                placeholder="1234567890"
                 value={formData.phone_number}
-                onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+                onChange={(e) => handlePhoneChange(e.target.value)}
               />
             </div>
 
