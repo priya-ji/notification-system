@@ -90,6 +90,12 @@ CORS_ALLOWED_ORIGINS = config(
     ),
 ).split(',')
 
+# Vercel assigns a distinct URL to each preview deployment. Allow previews of
+# this frontend project as well as the production URL above.
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r'^https://notification-frontend-[a-z0-9-]+\.vercel\.app$',
+]
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 100,
