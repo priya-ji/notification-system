@@ -62,7 +62,14 @@ WSGI_APPLICATION = 'notification_system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # Vercel's deployed code directory is read-only. Its /tmp directory is
+        # writable for the lifetime of a serverless instance, which keeps this
+        # demo usable without requiring a managed database.
+        'NAME': (
+            '/tmp/notification-system.sqlite3'
+            if os.environ.get('VERCEL')
+            else BASE_DIR / 'db.sqlite3'
+        ),
     }
 }
 
